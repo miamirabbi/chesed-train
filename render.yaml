@@ -1,0 +1,63 @@
+databases:
+  - name: chesed-train-db
+    databaseName: chesed_train
+    user: chesed_user
+    plan: starter
+
+services:
+  - type: web
+    name: chesed-train
+    runtime: ruby
+    plan: starter
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: chesed-train-db
+          property: connectionString
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: SECRET_KEY_BASE
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: RECAPTCHA_SITE_KEY
+        sync: false
+      - key: RECAPTCHA_SECRET_KEY
+        sync: false
+
+  - type: worker
+    name: chesed-train-worker
+    runtime: ruby
+    plan: starter
+    buildCommand: "bundle install"
+    startCommand: "bundle exec sidekiq"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: chesed-train-db
+          property: connectionString
+      - key: RAILS_ENV
+        value: production
+      - key: REDIS_URL
+        fromService:
+          name: chesed-train-redis
+          type: redis
+          property: connectionString
+      - key: SECRET_KEY_BASE
+        sync: false
+
+  - type: redis
+    name: chesed-train-redis
+    plan: starter

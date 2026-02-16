@@ -1,0 +1,15 @@
+.container.p-10
+  .flex.flex-col.items-center.justify-center.border.border-primary.rounded-lg.p-10.w-full.relative
+    %div{ class: "text-secondary lg:text-[2rem] text-[1rem] font-lato font-[700] mb-5"} 
+      Who is Your Chesed Train For?
+
+    = form_with(model: event, class: 'space-y-4 lg:w-1/2 w-full mt-5') do |f|
+      = f.hidden_field :type, value: 'ChesedTrain'
+      
+      = render partial: "shared/field", locals: { field: 'name', model: event, label: "Title of Chesed Train", f: f }
+      = render partial: "shared/field", locals: { field: 'recipent_name', model: event, label: "Recipient Name", f: f }
+      = render partial: "shared/field", locals: { field: 'recipent_email', model: event, label: "Recipient Email", f: f }
+      .mt-10.flex.justify-center
+        = f.submit "Next", class: 'w-[11rem] button'
+      %div{ class: "text-center text-secondary lg:flex hidden absolute left-[10%] bottom-12  font-bold"}
+        Step 1 of 4 

@@ -1,0 +1,16 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title= 'Chesed Train'
+    %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "https://chesedtrain.com/ogimage.jpg", :property => "og:image"}/
+    = csrf_meta_tags
+    = csp_meta_tag
+    = yield :head
+    = favicon_link_tag asset_path('favicon-16x16.png')
+    = stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload", rel: "stylesheet"
+    = javascript_include_tag "application", "data-turbo-track": "reload", type: "module" 
+
+  %body{style: 'background-color:white'}
