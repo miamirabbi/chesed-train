@@ -47,11 +47,17 @@
           = @event.owner.name
           <br>
           = @event.owner.email_address
+          - if @event.organizer_phone.present?
+            <br>
+            = @event.organizer_phone
         Recipient:
         .font-normal.lg:mb-5
           = @event.recipent_name
           <br>
           = @event.recipent_email
+          - if @event.recipient_phone.present?
+            <br>
+            = @event.recipient_phone
         Participants:
         .font-normal
           - if @event.volunteers.blank?

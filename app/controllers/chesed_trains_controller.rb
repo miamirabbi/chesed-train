@@ -181,7 +181,7 @@ class ChesedTrainsController < ApplicationController
   end
 
   def chesed_train_params
-    params.require(:chesed_train).permit(:recipent_name, :recipent_email, :name, :type)
+    params.require(:chesed_train).permit(:recipent_name, :recipent_email, :recipient_phone, :organizer_phone, :name, :type)
   end
 
   def location_params
@@ -205,7 +205,7 @@ class ChesedTrainsController < ApplicationController
   end
 
   def all_params
-    params.require(:chesed_train).permit(:type, :start_date, :stage, :fav_rest, :end_date, :address1, :address2, :city, :state, :postal_code, :country, :recipent_name, :recipent_email, :name, :dietary_restrictions, :allergies,
+    params.require(:chesed_train).permit(:type, :start_date, :stage, :fav_rest, :end_date, :address1, :address2, :city, :state, :postal_code, :country, :recipent_name, :recipent_email, :recipient_phone, :organizer_phone, :name, :dietary_restrictions, :allergies,
                                          :special_message, :adults, :kids, :least, :preferred_time, :fav_rest,
                                          :shabbat_instructions, :date_range)
   end

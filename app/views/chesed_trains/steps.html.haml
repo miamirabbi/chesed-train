@@ -29,6 +29,14 @@
           = f.label :recipent_email, "Recipient Email:", class: 'block text-sm font-bold text-secondary mb-1'
           = f.email_field :recipent_email, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
         
+        .form-group
+          = f.label :recipient_phone, "Recipient Phone:", class: 'block text-sm font-bold text-secondary mb-1'
+          = f.telephone_field :recipient_phone, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', placeholder: '(555) 123-4567'
+        
+        .form-group
+          = f.label :organizer_phone, "Organizer Phone:", class: 'block text-sm font-bold text-secondary mb-1'
+          = f.telephone_field :organizer_phone, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', placeholder: '(555) 123-4567'
+        
         .mt-10.flex.justify-center
           = f.submit "Next", class: 'w-[11rem] bg-primary-original border border-secondary text-white lg:py-2 py-1 rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
         %div{ class: "text-center text-secondary lg:flex hidden absolute left-[10%] bottom-12  font-bold"}
