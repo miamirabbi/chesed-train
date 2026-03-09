@@ -81,11 +81,7 @@ class ChesedTrainsController < ApplicationController
       end
     when 4
       if @event.update(preferences_params)
-        if @event.event_dates.joins(:selections).exists?
-          redirect_to yom_tovs_chesed_train_path(@event)
-        else
-          redirect_to steps_chesed_train_path(@event, step: 5)
-        end
+        redirect_to steps_chesed_train_path(@event, step: 5)
       else
         render :steps, status: :unprocessable_entity
       end
