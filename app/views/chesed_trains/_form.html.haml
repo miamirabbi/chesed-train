@@ -9,7 +9,7 @@
       = render partial: "shared/field", locals: { field: 'name', model: event, label: "Title of Chesed Train", f: f }
       = render partial: "shared/field", locals: { field: 'recipent_name', model: event, label: "Recipient Name", f: f }
       = render partial: "shared/field", locals: { field: 'recipent_email', model: event, label: "Recipient Email", f: f }
-      = render partial: "shared/field", locals: { field: 'recipient_phone', model: event, label: "Recipient Phone", f: f }
+      = render partial: "shared/field", locals: { field: 'recipient_phone', model: event, label: "Recipient Phone (Optional)", f: f }
       = render partial: "shared/field", locals: { field: 'organizer_phone', model: event, label: "Organizer Phone", f: f }
       .mt-10.flex.justify-center
         = f.submit "Next", class: 'w-[11rem] button'
