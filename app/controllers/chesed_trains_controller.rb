@@ -81,19 +81,13 @@ class ChesedTrainsController < ApplicationController
       end
     when 4
       if @event.update(preferences_params)
-        redirect_to steps_chesed_train_path(@event, step: 5)
-      else
-        render :steps, status: :unprocessable_entity
-      end
-    when 5
-      if @event.update(donation_params)
         redirect_after_update
       else
         render :steps, status: :unprocessable_entity
       end
-    when 6
+    when 5
 
-    when 7
+    when 6
       current_user = check_owner
 
       if current_user.update(user_params.merge(guest: false))
@@ -148,7 +142,7 @@ class ChesedTrainsController < ApplicationController
 
   def redirect_after_update
     if current_user.guest?
-      redirect_to steps_chesed_train_path(@event, step: 6)
+      redirect_to steps_chesed_train_path(@event, step: 5)
     else
       send_emails
       TwilioService.call(current_user, 'chesed_train')
