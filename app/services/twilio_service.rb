@@ -10,9 +10,10 @@ class TwilioService
     @volunteer = kwargs[:volunteer_name]
     @bringing = kwargs[:bringing]
     @date = kwargs[:date]
+    @amount = kwargs[:amount]
   end
 
-  attr_reader :bringing, :date, :volunteer
+  attr_reader :bringing, :date, :volunteer, :amount
 
   def call
     return unless @user.sms?
@@ -58,6 +59,9 @@ class TwilioService
 
     when 'volunteer'
       'Thank you for volunteering! You will receive a reminder when to bring your item.'
+    
+    when 'donation_received'
+      "Great news! A donation of $#{@amount} has been received for your Chesed Train!"
     end
   end
 end

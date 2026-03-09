@@ -29,7 +29,7 @@ class DonationsController < ApplicationController
         quantity: 1
       }],
       mode: 'payment',
-      success_url: donation_success_url(event_id: @event.id, amount: amount),
+      success_url: donation_success_url(event_id: @event.id, amount: amount, donor_name: params[:donor_name]),
       cancel_url: donate_chesed_train_url(@event),
       metadata: {
         event_id: @event.id,
@@ -68,12 +68,31 @@ class DonationsController < ApplicationController
   def success
     event_id = params[:event_id]
     amount = params[:amount].to_i
+    donor_name = params[:donor_name]
     
     if event_id.present? && amount > 0
       event = Event.find(event_id)
       event.increment!(:total_donated, amount)
       @event = event
       @amount = amount
+      
+      # Send notifications to organizer
+      if event.owner.present?
+        # Email notification
+        DonationMailer.donation_received(event.owner, event, amount, donor_name).deliver_later
+        
+        # SMS notification
+        TwilioService.call(event.owner, 'donation_received', amount: amount)
+      end
+      
+      # Send notification to recipient if they have an account
+      if event.recipent_email.present?
+        recipient_user = User.find_by(email_address: event.recipent_email)
+        if recipient_user.present?
+          DonationMailer.donation_received(recipient_user, event, amount, donor_name).deliver_later
+          TwilioService.call(recipient_user, 'donation_received', amount: amount)
+        end
+      end
     else
       redirect_to root_path, alert: 'Invalid donation'
     end
@@ -86,6 +105,8 @@ class DonationsController < ApplicationController
   end
 
   def donation_success_url(params)
-    "#{request.base_url}/donation-success?event_id=#{params[:event_id]}&amount=#{params[:amount]}"
+    base = "#{request.base_url}/donation-success?event_id=#{params[:event_id]}&amount=#{params[:amount]}"
+    base += "&donor_name=#{CGI.escape(params[:donor_name])}" if params[:donor_name].present?
+    base
   end
 end
