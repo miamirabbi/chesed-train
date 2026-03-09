@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'create_payment_link', to: 'payments#create_payment_link'
   post '/success', to: 'payments#success'
   get '/payment-success', to: 'payments#payment_success'
+  get '/donation-success', to: 'donations#success'
   get '/chesed-train-pro-account', to: 'payments#pro', as: :pro_account
   get 'chesed-train-pro/', to: 'payments#new', as: :new_payment
   post 'ads/:id/track', to: 'ads#track', as: 'track_ad'
@@ -21,6 +22,8 @@ Rails.application.routes.draw do
       get 'thank-you', to: 'chesed_trains#thank_you', as: :thank_you
       get '/shabbat', to: 'yom_tovs#index', as: :yom_tovs
       get '/yomtov', to: 'chesed_trains#yom_tov_next', as: :yom_tov_next
+      get '/donate', to: 'donations#new', as: :donate
+      post '/donate', to: 'donations#create', as: :create_donation
     end
 
     resources :event_dates do

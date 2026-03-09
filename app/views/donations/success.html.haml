@@ -1,0 +1,20 @@
+.container.p-10
+  .flex.flex-col.items-center.justify-center.border.border-primary.rounded-lg.lg:p-10.p-5.w-full.max-w-xl.mx-auto.text-center
+    .w-20.h-20.rounded-full.bg-green-100.flex.items-center.justify-center.mb-6
+      %svg{xmlns: "http://www.w3.org/2000/svg", class: "h-10 w-10 text-green-600", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor"}
+        %path{stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: "M5 13l4 4L19 7"}
+    
+    %div{ class: "text-secondary lg:text-[2rem] text-[1.5rem] font-lato font-[700] mb-2"} 
+      Thank You!
+    
+    %div{ class: "text-secondary lg:text-[1.2rem] font-lato mb-6"} 
+      Your donation of 
+      %strong $#{number_with_delimiter(@amount)}
+      has been received.
+    
+    %p.text-secondary.mb-6
+      Your generosity will help 
+      = @event.recipent_name
+      with their needs. May you be blessed for your kindness!
+
+    = link_to "Back to Chesed Train", chesed_train_path(@event), class: 'w-full block px-4 bg-primary-original border border-secondary text-white p-2 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'

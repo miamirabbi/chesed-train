@@ -1,10 +1,31 @@
-.w-full.grid.grid-cols-1.lg:grid-cols-5.lg:gap-48.mt-5.lg:mt-0
-  .flex.flex-col.border.border-primary.rounded-lg.p-5.w-full.relative.col-span-3.mb-3
-    %div{ class: "text-secondary lg:text-2xl font-lato font-[700] mb-5 gap-4"} 
-      .row.flex.grid.gap-4{class: "grid-cols-1 md:grid-cols-1 xl:grid-cols-[65%_40%]"}
-        .col
-          Gift Cards
-          .font-normal.mb-5
-            Can't participate? There is another great way you can help the recipient by giving a gift card!
-        .flex.items-center.justify-center
-          = link_to 'Give a gift card', "https://www.giftya.com/buy", class: 'px-4 bg-primary-original border border-secondary text-white p-2 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer', target: :blank
+- if @event.donations_enabled && @event.donation_goal.to_i > 0
+  .w-full.grid.grid-cols-1.lg:grid-cols-5.lg:gap-48.mt-5.lg:mt-0
+    .flex.flex-col.border.border-primary.rounded-lg.p-5.w-full.relative.col-span-3.mb-3
+      %div{ class: "text-secondary lg:text-2xl font-lato font-[700] mb-3"} 
+        Donation Fund
+      
+      .mb-4
+        .flex.justify-between.text-secondary.mb-2
+          %span Raised
+          %span Goal: $#{number_with_delimiter(@event.donation_goal)}
+        .w-full.bg-gray-200.rounded-full.h-4
+          - progress = @event.total_donated.to_i > 0 ? [(@event.total_donated.to_f / @event.donation_goal.to_f * 100), 100].min : 0
+          .bg-green-500.h-4.rounded-full{ style: "width: #{progress}%" }
+        .text-center.text-secondary.font-bold.mt-2
+          $#{number_with_delimiter(@event.total_donated || 0)} raised
+
+      .font-normal.text-secondary.mb-4
+        Help the recipient with grocery expenses, restaurant takeout, babysitting, and more!
+
+      = link_to 'Donate Now', donate_chesed_train_path(@event), class: 'w-full block px-4 bg-primary-original border border-secondary text-white p-2 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
+- else
+  .w-full.grid.grid-cols-1.lg:grid-cols-5.lg:gap-48.mt-5.lg:mt-0
+    .flex.flex-col.border.border-primary.rounded-lg.p-5.w-full.relative.col-span-3.mb-3
+      %div{ class: "text-secondary lg:text-2xl font-lato font-[700] mb-5 gap-4"} 
+        .row.flex.grid.gap-4{class: "grid-cols-1 md:grid-cols-1 xl:grid-cols-[65%_40%]"}
+          .col
+            Gift Cards
+            .font-normal.mb-5
+              Can't participate? There is another great way you can help the recipient by giving a gift card!
+          .flex.items-center.justify-center
+            = link_to 'Give a gift card', "https://www.giftya.com/buy", class: 'px-4 bg-primary-original border border-secondary text-white p-2 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer', target: :blank

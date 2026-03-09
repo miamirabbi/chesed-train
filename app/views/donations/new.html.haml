@@ -1,0 +1,89 @@
+.container.p-2.md:p-10
+  .flex.flex-col.items-center.justify-center.border.border-primary.rounded-lg.lg:p-10.p-5.w-full.max-w-2xl.mx-auto
+    %div{ class: "text-secondary lg:text-[2rem] text-[1.5rem] font-lato font-[700] mb-2"} 
+      Donate to Help
+    %div{ class: "text-secondary lg:text-[1.5rem] text-[1.2rem] font-lato mb-5"} 
+      = @event.recipent_name
+
+    - if @event.donation_goal.to_i > 0
+      .w-full.mb-6
+        .flex.justify-between.text-secondary.mb-2
+          %span 
+            %strong $#{number_with_delimiter(@event.total_donated || 0)}
+            raised
+          %span Goal: $#{number_with_delimiter(@event.donation_goal)}
+        .w-full.bg-gray-200.rounded-full.h-4
+          - progress = @event.total_donated.to_i > 0 ? [(@event.total_donated.to_f / @event.donation_goal.to_f * 100), 100].min : 0
+          .bg-green-500.h-4.rounded-full{ style: "width: #{progress}%" }
+
+    .w-full.mb-6
+      %div{ class: "text-secondary font-lato font-[700] mb-3"} 
+        Help the recipient with:
+      .grid.grid-cols-2.gap-3
+        .flex.items-center.p-3.bg-amber-50.rounded-xl
+          .w-10.h-10.rounded-full.bg-amber-100.flex.items-center.justify-center.mr-3
+            %svg{xmlns: "http://www.w3.org/2000/svg", class: "h-5 w-5 text-amber-600", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor"}
+              %path{stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"}
+          %span.text-secondary.text-sm Groceries
+        .flex.items-center.p-3.bg-blue-50.rounded-xl
+          .w-10.h-10.rounded-full.bg-blue-100.flex.items-center.justify-center.mr-3
+            %svg{xmlns: "http://www.w3.org/2000/svg", class: "h-5 w-5 text-blue-600", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor"}
+              %path{stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"}
+          %span.text-secondary.text-sm Restaurant
+        .flex.items-center.p-3.bg-pink-50.rounded-xl
+          .w-10.h-10.rounded-full.bg-pink-100.flex.items-center.justify-center.mr-3
+            %svg{xmlns: "http://www.w3.org/2000/svg", class: "h-5 w-5 text-pink-600", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor"}
+              %path{stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"}
+          %span.text-secondary.text-sm Babysitting
+        .flex.items-center.p-3.bg-red-50.rounded-xl
+          .w-10.h-10.rounded-full.bg-red-100.flex.items-center.justify-center.mr-3
+            %svg{xmlns: "http://www.w3.org/2000/svg", class: "h-5 w-5 text-red-500", fill: "currentColor", viewBox: "0 0 24 24"}
+              %path{d: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"}
+          %span.text-secondary.text-sm And More
+
+    = form_tag create_donation_chesed_train_path(@event), method: :post, class: 'w-full' do
+      .mb-4
+        %label.text-secondary.font-medium.block.mb-2 Select Amount
+        .grid.grid-cols-3.gap-3.mb-3{ data: { controller: 'donation-amount' } }
+          %label.flex.items-center.justify-center.p-3.bg-amber-50.rounded-xl.cursor-pointer.border-2.border-transparent.hover:border-secondary{ data: { action: 'click->donation-amount#select' } }
+            %input{ type: 'radio', name: 'amount', value: '18', class: 'hidden', data: { donation_amount_target: 'radio' } }
+            %span.text-secondary.font-medium $18
+          %label.flex.items-center.justify-center.p-3.bg-amber-50.rounded-xl.cursor-pointer.border-2.border-transparent.hover:border-secondary{ data: { action: 'click->donation-amount#select' } }
+            %input{ type: 'radio', name: 'amount', value: '36', class: 'hidden', data: { donation_amount_target: 'radio' } }
+            %span.text-secondary.font-medium $36
+          %label.flex.items-center.justify-center.p-3.bg-amber-50.rounded-xl.cursor-pointer.border-2.border-transparent.hover:border-secondary{ data: { action: 'click->donation-amount#select' } }
+            %input{ type: 'radio', name: 'amount', value: '54', class: 'hidden', data: { donation_amount_target: 'radio' } }
+            %span.text-secondary.font-medium $54
+          %label.flex.items-center.justify-center.p-3.bg-amber-50.rounded-xl.cursor-pointer.border-2.border-transparent.hover:border-secondary{ data: { action: 'click->donation-amount#select' } }
+            %input{ type: 'radio', name: 'amount', value: '100', class: 'hidden', data: { donation_amount_target: 'radio' } }
+            %span.text-secondary.font-medium $100
+          %label.flex.items-center.justify-center.p-3.bg-amber-50.rounded-xl.cursor-pointer.border-2.border-transparent.hover:border-secondary{ data: { action: 'click->donation-amount#select' } }
+            %input{ type: 'radio', name: 'amount', value: '180', class: 'hidden', data: { donation_amount_target: 'radio' } }
+            %span.text-secondary.font-medium $180
+          %label.flex.items-center.justify-center.p-3.bg-amber-50.rounded-xl.cursor-pointer.border-2.border-transparent.hover:border-secondary.col-span-1{ data: { action: 'click->donation-amount#selectOther' } }
+            %input{ type: 'radio', name: 'amount_type', value: 'other', class: 'hidden', data: { donation_amount_target: 'otherRadio' } }
+            %span.text-secondary.font-medium Other
+
+        .hidden.mt-3{ data: { donation_amount_target: 'customAmount' } }
+          %label.text-secondary.font-medium.block.mb-2 Custom Amount
+          .flex.items-center.border.border-secondary.rounded-xl.overflow-hidden
+            %span.bg-gray-100.px-4.py-3.text-secondary.font-medium $
+            %input{ type: 'number', name: 'amount', class: 'flex-1 px-3 py-3 focus:outline-none', placeholder: '50', min: 1, data: { donation_amount_target: 'customInput' } }
+
+      .mb-4
+        %label.text-secondary.font-medium.block.mb-2 Your Name (Optional)
+        %input{ type: 'text', name: 'donor_name', class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', placeholder: 'Your name' }
+
+      .mb-4
+        %label.text-secondary.font-medium.block.mb-2 Your Email (Optional)
+        %input{ type: 'email', name: 'donor_email', class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', placeholder: 'your@email.com' }
+
+      %p.text-secondary.text-xs.mb-4
+        A small platform fee and processing fee are applied to each donation.
+
+      .mt-6
+        %button{ type: 'submit', class: 'w-full bg-primary-original border border-secondary text-white py-3 rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer font-medium' }
+          Donate Now
+
+    .mt-4
+      = link_to "← Back to Chesed Train", chesed_train_path(@event), class: 'text-secondary hover:underline'

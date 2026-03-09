@@ -84,14 +84,20 @@ class ChesedTrainsController < ApplicationController
         if @event.event_dates.joins(:selections).exists?
           redirect_to yom_tovs_chesed_train_path(@event)
         else
-          redirect_after_update
+          redirect_to steps_chesed_train_path(@event, step: 5)
         end
       else
         render :steps, status: :unprocessable_entity
       end
     when 5
-
+      if @event.update(donation_params)
+        redirect_after_update
+      else
+        render :steps, status: :unprocessable_entity
+      end
     when 6
+
+    when 7
       current_user = check_owner
 
       if current_user.update(user_params.merge(guest: false))
@@ -146,7 +152,7 @@ class ChesedTrainsController < ApplicationController
 
   def redirect_after_update
     if current_user.guest?
-      redirect_to steps_chesed_train_path(@event, step: 5)
+      redirect_to steps_chesed_train_path(@event, step: 6)
     else
       send_emails
       TwilioService.call(current_user, 'chesed_train')
@@ -197,6 +203,10 @@ class ChesedTrainsController < ApplicationController
   def preferences_params
     params.require(:chesed_train).permit(:dietary_restrictions, :allergies, :special_message, :adults,
                                          :kids, :least, :preferred_time, :fav_rest, :shabbat_instructions, date_range: %i[start_date end_date])
+  end
+
+  def donation_params
+    params.require(:chesed_train).permit(:donation_goal, :donations_enabled)
   end
 
   def user_params
