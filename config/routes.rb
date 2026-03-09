@@ -24,6 +24,8 @@ Rails.application.routes.draw do
       get '/yomtov', to: 'chesed_trains#yom_tov_next', as: :yom_tov_next
       get '/donate', to: 'donations#new', as: :donate
       post '/donate', to: 'donations#create', as: :create_donation
+      get '/setup-donation', to: 'donations#setup', as: :setup_donation
+      patch '/setup-donation', to: 'donations#update_setup', as: :update_donation_setup
     end
 
     resources :event_dates do

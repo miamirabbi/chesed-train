@@ -1,5 +1,5 @@
 class DonationsController < ApplicationController
-  before_action :set_event, only: [:new, :create]
+  before_action :set_event, only: [:new, :create, :setup, :update_setup]
 
   def new
     @event = Event.friendly.find(params[:id])
@@ -40,6 +40,28 @@ class DonationsController < ApplicationController
     redirect_to session.url, allow_other_host: true
   rescue Stripe::StripeError => e
     redirect_to donate_chesed_train_path(@event), alert: "Payment error: #{e.message}"
+  end
+
+  def setup
+    unless current_user && @event.owner == current_user
+      redirect_to chesed_train_path(@event), alert: 'Only the organizer can set up donations'
+      return
+    end
+  end
+
+  def update_setup
+    unless current_user && @event.owner == current_user
+      redirect_to chesed_train_path(@event), alert: 'Only the organizer can set up donations'
+      return
+    end
+
+    goal = params[:donation_goal].to_i
+    if goal > 0
+      @event.update(donation_goal: goal, donations_enabled: true, total_donated: 0)
+      redirect_to chesed_train_path(@event), notice: 'Donation fund has been set up!'
+    else
+      redirect_to setup_donation_chesed_train_path(@event), alert: 'Please select a goal amount'
+    end
   end
 
   def success
