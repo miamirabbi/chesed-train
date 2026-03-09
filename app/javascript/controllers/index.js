@@ -42,3 +42,9 @@ application.register("phone", PhoneController)
 
 import YomTovToggleController from "./yom_tov_toggle_controller"
 application.register("yom-tov-toggle", YomTovToggleController)
+
+import DonationGoalController from "./donation_goal_controller"
+application.register("donation-goal", DonationGoalController)
+
+import DonationAmountController from "./donation_amount_controller"
+application.register("donation-amount", DonationAmountController)
