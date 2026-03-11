@@ -7,10 +7,15 @@ class DonationsController < ApplicationController
   end
 
   def create
-    amount = params[:amount].to_i
+    # Use custom_amount if provided, otherwise use radio button amount
+    amount = if params[:custom_amount].present? && params[:custom_amount].to_i > 0
+               params[:custom_amount].to_i
+             else
+               params[:amount].to_i
+             end
     
     if amount <= 0
-      redirect_to donate_chesed_train_path(@event), alert: 'Please enter a valid amount'
+      redirect_to donate_chesed_train_path(@event), alert: 'Please select or enter an amount'
       return
     end
 
