@@ -77,13 +77,19 @@ class SelectionsController < ApplicationController
   def add_volunteer
     if @selection.update!(selection_params.merge(volunteer: current_user))
       @event.volunteers << current_user
-      TwilioService.call(current_user, 'volunteer')
-      if @event.type == 'Potluck'
-        TwilioService.call(@event.owner, 'volunteer_joined_potluck')
-      else
-        TwilioService.call(@event.owner, 'volunteer_joined_chesed_train')
+      
+      # Send notifications (don't let failures block the redirect)
+      begin
+        TwilioService.call(current_user, 'volunteer')
+        if @event.type == 'Potluck'
+          TwilioService.call(@event.owner, 'volunteer_joined_potluck')
+        else
+          TwilioService.call(@event.owner, 'volunteer_joined_chesed_train')
+        end
+        RecipientMailer.with(event: @event, task: @selection, volunteer: current_user).volunteer_signup.deliver_later
+      rescue => e
+        Rails.logger.error("Notification error: #{e.message}")
       end
-      RecipientMailer.with(event: @event, task: @selection, volunteer: current_user).volunteer_signup.deliver_now
 
       if @event.type == 'ChesedTrain'
         redirect_to thank_you_chesed_train_path(@event)
