@@ -1,5 +1,5 @@
 class SelectionsController < ApplicationController
-  before_action :set_event, :set_selection, only: %i[update show volunteer setup_volunteer add_volunteer]
+  before_action :set_event, :set_selection, only: %i[update show volunteer setup_volunteer add_volunteer guest_volunteer]
   before_action :set_kwargs, only: %i[destroy update]
 
   def new
