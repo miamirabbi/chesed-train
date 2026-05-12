@@ -24,9 +24,9 @@
                 - else
                   - if event.end_date >= Date.today
                     .area
-                      = link_to "Edit Potluck", edit_potluck_path(event), class: "text-center bg-primary-original border border-secondary text-white px-2 py-2 rounded-xl hover:bg-primary-original transition duration-200 inline-block w-48 cursor-pointer"
+                      = link_to "Edit Joint Meal", edit_joint meal_path(event), class: "text-center bg-primary-original border border-secondary text-white px-2 py-2 rounded-xl hover:bg-primary-original transition duration-200 inline-block w-48 cursor-pointer"
                   .area
-                    = link_to "View", potluck_path(event), class: "text-center bg-primary-original border border-secondary text-white px-2 py-2 rounded-xl hover:bg-primary-original transition duration-200 cursor-pointer inline-block w-48"
+                    = link_to "View", joint meal_path(event), class: "text-center bg-primary-original border border-secondary text-white px-2 py-2 rounded-xl hover:bg-primary-original transition duration-200 cursor-pointer inline-block w-48"
 
           - if @past_events.present?
             %h1 Past Events
@@ -45,7 +45,7 @@
                           %tr
                             %td= event.name
                             %td= link_to 'View', event
-          - if @chesed_events.present? || @potluck_events.present?
+          - if @chesed_events.present? || @joint meal_events.present?
             %p.text-secondary{class: 'text-[1.5rem] my-5'}
               Volunteered Events
           - if @chesed_events.present?
@@ -62,7 +62,7 @@
 
                         %tbody#rows
                           = render partial: 'selections/row', collection: @chesed_events, as: :selection
-          - if @potluck_events.present?
+          - if @joint meal_events.present?
             .w-full.mb-5
               .overflow-x-auto{:class => "-m-1.5"}
                 .min-w-full.inline-block.align-middle{:class => "p-1.5"}
@@ -75,4 +75,4 @@
                           %th.py-3.text-end.text-xs.font-medium.text-gray-8.uppercase 
 
                         %tbody#rows
-                          = render partial: 'selections/row', collection: @potluck_events, as: :selection
+                          = render partial: 'selections/row', collection: @joint meal_events, as: :selection

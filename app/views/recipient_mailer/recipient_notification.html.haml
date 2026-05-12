@@ -1,8 +1,8 @@
 %tr
   %td{:style => "padding: 20px 30px; color: rgb(229, 231, 235); background-color: rgba(63, 114, 175, 0.2); font-size: 16px; line-height: 1.5;color:black;"}
-    - if @event.type == 'Potluck'
+    - if @event.type == 'Joint Meal'
       %p
-        You setup a Potluck
+        You setup a Joint Meal
       %p
         Here is what you need to know:
       %ul
@@ -11,10 +11,10 @@
         %li
           Date: #{ @event.recipent_name }
         %li
-          Chesed Train Link: #{ potluck_url(@event) }
+          Chesed Train Link: #{ joint meal_url(@event) }
 
       %p
-        You can #{ link_to 'log in', potluck_url(@event) } at anytime to see what has been arranged. 
+        You can #{ link_to 'log in', joint meal_url(@event) } at anytime to see what has been arranged. 
 
       %p
         Wishing you blessings and support from your community!

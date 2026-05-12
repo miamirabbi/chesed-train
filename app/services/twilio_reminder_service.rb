@@ -34,8 +34,8 @@ class TwilioReminderService
     case message
     when 'chesed_train'
       "Hi #{volunteer.first_name}, this is a reminder for your upcoming Chesed Train task: #{event.bringing} on #{event.date_weekday} #{event.date_month}/#{event.date_number} at #{time}."
-    when 'potluck'
-      "Hi #{volunteer.first_name}, this is a reminder for your upcoming Potluck task: #{event.bringing} on #{event.potluck.start_date.strftime('%A %m/%d')} at #{time}."
+    when 'joint meal'
+      "Hi #{volunteer.first_name}, this is a reminder for your upcoming Joint Meal task: #{event.bringing} on #{event.joint meal.start_date.strftime('%A %m/%d')} at #{time}."
     end
   end
 

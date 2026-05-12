@@ -18,13 +18,13 @@
       .mt-12.flex.justify-center.gap-3.lg:space-x-2.items-center.lg:flex-row.flex-col
         = f.submit "Login", class: 'mt-2 w-[11rem] bg-primary-original border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
         - if @steps 
-          - if @event == 'potluck'
-            = link_to "Back", steps_potluck_path(@event_id, 5), class: 'mt-2 px-4 secondary border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
+          - if @event == 'joint meal'
+            = link_to "Back", steps_joint meal_path(@event_id, 5), class: 'mt-2 px-4 secondary border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
           - elsif  @event == 'chesed_train'
             = link_to "Back", steps_chesed_train_path(@event_id, 5), class: 'mt-2 px-4 secondary border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
         - elsif @selection
-          - if @event == 'potluck'
-            = link_to "Back", potluck_path(@event_id), class: 'mt-2 px-4 secondary border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
+          - if @event == 'joint meal'
+            = link_to "Back", joint meal_path(@event_id), class: 'mt-2 px-4 secondary border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
           - elsif  @event == 'chesed_train'
             = link_to "Back", chesed_train_path(@event_id), class: 'mt-2 px-4 secondary border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
         - else
