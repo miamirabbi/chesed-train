@@ -16,8 +16,8 @@
   = render partial: "shared/field", locals: { field: 'country', model: event, label: "Country", f: f }
 
   .mt-10.flex.justify-center.lg:space-x-2.space-y-5.items-center.flex-col-reverse.lg:flex-row
-    - if @event.type == 'Joint Meal'
-      = link_to "Back", steps_joint meal_path(event, step: 1), class: 'mt-5 w-[11rem] button text-center'
+    - if @event.type == 'Potluck'
+      = link_to "Back", steps_potluck_path(event, step: 1), class: 'mt-5 w-[11rem] button text-center'
     - else
       = link_to "Back", steps_chesed_train_path(event, step: 1), class: 'mt-5 w-[11rem] button text-center'
 

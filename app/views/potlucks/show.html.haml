@@ -17,7 +17,7 @@
   .w-full.grid.grid-cols-1.lg:grid-cols-5.lg:gap-48
     .flex.flex-col.bg-primary.border.border-primary.rounded-lg.lg:p-10.p-5.w-full.relative.col-span-3.mb-3
       %div{ class: "text-secondary lg:text-3xl font-lato font-[700] "} 
-        Joint Meal Info:
+        Potluck Info:
       %div{ class: "text-secondary lg:text-2xl font-lato mb-5"} 
         = @event.special_message
       %div{ class: "text-secondary lg:text-3xl font-lato font-[700] "} 
@@ -59,7 +59,7 @@
     = link_to(image_tag(@ad.image), "https://#{@ad.link}", data: { controller: "link-click", action: "click->link-click#click", link_click_url_value: track_ad_path(@ad), link_click_redirect_value: @ad.link } ) if @ad
   .flex.flex-col.items-center.w-full.relative.mt-5
     %div{ class: "text-secondary lg:text-3xl text-[1rem] font-lato font-[700] mb-5 text-center"}
-      Joint Meal Options
+      Potluck Options
   .grid.grid-cols-1.gap-4.bg-primary.rounded.p-8.text-xl.mb-12.lg:justify-center
     - @event.selections.order(name: :asc).each do |selection|
       .bg-white.rounded.p-8.lg:grid.lg:grid-cols-2
@@ -77,7 +77,7 @@
             - if Date.today > @event.end_date
               Date for adding volunteers has passed
             - else
-              = link_to 'Volunteer', volunteer_joint meal_selection_path(@event, selection), class: 'mt-5 lg:mt-0 w-full block px-12 bg-primary-original border border-secondary text-white p-2 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer font-normal lg:h-[46px]'
+              = link_to 'Volunteer', volunteer_potluck_selection_path(@event, selection), class: 'mt-5 lg:mt-0 w-full block px-12 bg-primary-original border border-secondary text-white p-2 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer font-normal lg:h-[46px]'
   .flex.flex-col.items-center.w-full.relative.mt-5
     = link_to(image_tag(@ad2.image), "https://#{@ad2.link}", data: { controller: "link-click", action: "click->link-click#click", link_click_url_value: track_ad_path(@ad2), link_click_redirect_value: @ad2.link } ) if @ad2
 

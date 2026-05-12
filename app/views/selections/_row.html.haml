@@ -2,14 +2,14 @@
 
   %td{ colspan: 4, class: "min-w-full" }
     %div.font-bold
-      = [ selection.try(:joint meal)&.name, selection.try(:chesed_train)&.name ].compact.first
+      = [ selection.try(:potluck)&.name, selection.try(:chesed_train)&.name ].compact.first
         
     %div.font-semibold.text-sm.my-2
       Event Date
     %div.text-xs.text-gray-500
-      = [ selection.try(:joint meal_date)&.strftime("%A %b %d"), selection.try(:full_date)&.to_date ].compact.first
+      = [ selection.try(:potluck_date)&.strftime("%A %b %d"), selection.try(:full_date)&.to_date ].compact.first
       = " at "
-      = [ selection.try(:joint meal)&.preferred_time, selection.try(:chesed_train)&.preferred_time ].compact.first
+      = [ selection.try(:potluck)&.preferred_time, selection.try(:chesed_train)&.preferred_time ].compact.first
     %div.font-semibold.text-sm.my-2
       Bringing
     %div.mt-2

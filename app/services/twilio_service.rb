@@ -39,23 +39,23 @@ class TwilioService
     when 'volunteer_joined_chesed_train'
       "A volunteer has joined your Chesed Train! Log in here: #{Rails.application.routes.url_helpers.login_url(protocol: 'https')} and view your Chesed Train!"
 
-    when 'volunteer_joined_joint meal'
-      "A volunteer has joined your Joint Meal! Log in here: #{Rails.application.routes.url_helpers.login_url(protocol: 'https')} and view your Joint Meal!"
+    when 'volunteer_joined_potluck'
+      "A volunteer has joined your Potluck! Log in here: #{Rails.application.routes.url_helpers.login_url(protocol: 'https')} and view your Potluck!"
 
     when 'chesed_train'
       'Thank you for creating a Chesed Train, you will be notified by text message when someone volunteers'
 
-    when 'joint meal'
-      'Thank you for creating a Joint Meal, you will be notified by text message when someone volunteers'
+    when 'potluck'
+      'Thank you for creating a Pot Luck, you will be notified by text message when someone volunteers'
 
-    when 'joint meal_updated'
+    when 'potluck_updated'
       "#{volunteer} is now bringing #{bringing} on #{date}"
 
     when 'chesed_train_removed'
       "#{volunteer} has left the Chesed Train and will not be bringing #{bringing} on #{date}"
 
-    when 'joint meal_day_removed'
-      "#{volunteer} has left the Joint Meal and will not be bringing #{bringing} on #{date}"
+    when 'potluck_day_removed'
+      "#{volunteer} has left the Potluck and will not be bringing #{bringing} on #{date}"
 
     when 'volunteer'
       'Thank you for volunteering! You will receive a reminder when to bring your item.'

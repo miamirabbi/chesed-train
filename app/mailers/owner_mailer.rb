@@ -34,7 +34,7 @@ class OwnerMailer < ApplicationMailer
               [@task.try(:event_date)&.date_weekday, @task.try(:event_date)&.date_month, @task.try(:event_date)&.date_number,
                @task.try(:date_weekday), @task.try(:date_month), @task.try(:date_number)].compact.join(' ')
             else
-              @task.joint meal_date.strftime('%A %b %d')
+              @task.potluck_date.strftime('%A %b %d')
             end
 
     mail(to: @owner.email_address, subject: "A Volunteer has removed themselves from the event on #{@date}")
