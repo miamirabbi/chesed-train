@@ -3,7 +3,7 @@
     .flex.flex-col.bg-primary.items-center.justify-center.border.border-primary.rounded-lg.lg:p-10.p-5.w-full.relative
       %div{ class: "text-secondary lg:text-3xl text-[1rem] font-lato font-[700] mb-5"}
         Volunteer
-      = form_with model: @selection, url: add_volunteer_chesed_train_event_date_path(@event, @selection), method: :patch, class: 'lg:space-y-4 space-y-2 lg:w-1/2 w-full' do |f|
+      = form_with model: @selection, url: add_volunteer_chesed_train_event_date_path(@event, @selection), method: :patch, class: 'lg:space-y-4 space-y-2 lg:w-1/2 w-full', data: { turbo: false } do |f|
         - if @selection.errors.any?
           %div{:style => "color: red"}
             %h2
@@ -38,6 +38,38 @@
 - else
   .container.p-10
     .flex.flex-col.items-center.justify-center.border.border-primary.rounded-lg.lg:p-10.p-5.w-full.relative
-      %div{ class: "text-secondary lg:text-[2rem] text-[1rem] font-lato font-[700] mb-5"} Create your Account
-      = render partial: 'shared/steps/user', locals: { user: User.new, url: setup_volunteer_chesed_train_event_date_path(@event, @selection), method: :post }
+      %div{ class: "text-secondary lg:text-[2rem] text-[1rem] font-lato font-[700] mb-5"} 
+        Volunteer
+      
+      .w-full.lg:w-2/3.mb-6
+        .flex.flex-col.lg:flex-row.gap-4.justify-center
+          = link_to 'Create Account', '#create-account', class: 'flex-1 text-center py-3 px-6 bg-primary-original border border-secondary text-white rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer', onclick: "document.getElementById('guest-form-ct').classList.add('hidden'); document.getElementById('account-form-ct').classList.remove('hidden'); return false;"
+          = link_to 'Continue as Guest', '#guest', class: 'flex-1 text-center py-3 px-6 bg-white border border-secondary text-secondary rounded-xl hover:bg-gray-100 transition duration-200 cursor-pointer', onclick: "document.getElementById('account-form-ct').classList.add('hidden'); document.getElementById('guest-form-ct').classList.remove('hidden'); return false;"
+      
+      #account-form-ct.w-full
+        %div{ class: "text-secondary text-lg font-lato font-[600] mb-3 text-center"} 
+          Create your Account
+        = render partial: 'shared/steps/user', locals: { user: User.new, url: setup_volunteer_chesed_train_event_date_path(@event, @selection), method: :post }
+      
+      #guest-form-ct.w-full.hidden
+        %div{ class: "text-secondary text-lg font-lato font-[600] mb-3 text-center"} 
+          Continue as Guest
+        = form_tag guest_volunteer_chesed_train_event_date_path(@event, @selection), method: :post, class: 'lg:space-y-4 space-y-2 lg:w-1/2 w-full mx-auto', data: { turbo: false } do
+          .form-group
+            = label_tag :guest_name, "Full Name *", class: 'block text-sm font-bold text-secondary mb-1'
+            = text_field_tag :guest_name, nil, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', required: true
+          .form-group
+            = label_tag :guest_email, "Email *", class: 'block text-sm font-bold text-secondary mb-1'
+            = email_field_tag :guest_email, nil, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', required: true
+          .form-group
+            = label_tag :guest_phone, "Phone Number *", class: 'block text-sm font-bold text-secondary mb-1'
+            = telephone_field_tag :guest_phone, nil, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', required: true
+          .form-group
+            = label_tag :bringing, "What will you be bringing?", class: 'block text-sm font-bold text-secondary mb-1'
+            = text_field_tag :bringing, nil, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+          .form-group
+            = label_tag :special_note, "Your message?", class: 'block text-sm font-bold text-secondary mb-1'
+            = text_field_tag :special_note, nil, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+          .mt-6.flex.justify-center
+            = submit_tag "Volunteer as Guest", class: 'w-[11rem] bg-primary-original border border-secondary text-white lg:py-2 py-1 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer'
 

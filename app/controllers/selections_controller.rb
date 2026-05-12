@@ -125,6 +125,55 @@ class SelectionsController < ApplicationController
     end
   end
 
+  def guest_volunteer
+    # Create a guest user with minimal info
+    names = params[:guest_name].to_s.split(' ', 2)
+    first_name = names[0] || 'Guest'
+    last_name = names[1] || ''
+    
+    @user = User.new(
+      first_name: first_name,
+      last_name: last_name,
+      email_address: params[:guest_email],
+      phone_number: params[:guest_phone],
+      password: SecureRandom.hex(16),
+      guest: true
+    )
+    
+    if @user.save
+      session[:user_id] = @user.id
+      
+      # Update the selection with volunteer info
+      @selection.update!(
+        volunteer: @user,
+        bringing: params[:bringing],
+        special_note: params[:special_note]
+      )
+      @event.volunteers << @user
+      
+      # Send notifications
+      begin
+        TwilioService.call(@user, 'volunteer')
+        if @event.type == 'Potluck'
+          TwilioService.call(@event.owner, 'volunteer_joined_potluck')
+        else
+          TwilioService.call(@event.owner, 'volunteer_joined_chesed_train')
+        end
+        RecipientMailer.with(event: @event, task: @selection, volunteer: @user).volunteer_signup.deliver_later
+      rescue => e
+        Rails.logger.error("Notification error: #{e.message}")
+      end
+      
+      if @event.type == 'ChesedTrain'
+        redirect_to thank_you_chesed_train_path(@event)
+      else
+        redirect_to thank_you_potluck_path(@event)
+      end
+    else
+      redirect_back fallback_location: root_path, alert: 'Please fill in all required fields'
+    end
+  end
+
   private
 
   def set_event
