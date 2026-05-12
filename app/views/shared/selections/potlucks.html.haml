@@ -39,18 +39,20 @@
       
       .w-full.lg:w-2/3.mb-6
         .flex.flex-col.lg:flex-row.gap-4.justify-center
-          = link_to 'Create Account', '#create-account', class: 'flex-1 text-center py-3 px-6 bg-primary-original border border-secondary text-white rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer', data: { action: 'click', target: 'account-form' }, onclick: "document.getElementById('guest-form').classList.add('hidden'); document.getElementById('account-form').classList.remove('hidden'); return false;"
-          = link_to 'Continue as Guest', '#guest', class: 'flex-1 text-center py-3 px-6 bg-white border border-secondary text-secondary rounded-xl hover:bg-gray-100 transition duration-200 cursor-pointer', onclick: "document.getElementById('account-form').classList.add('hidden'); document.getElementById('guest-form').classList.remove('hidden'); return false;"
+          %button{ type: 'button', class: 'flex-1 text-center py-3 px-6 bg-primary-original border border-secondary text-white rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer', onclick: "document.getElementById('guest-form').classList.add('hidden'); document.getElementById('account-form').classList.remove('hidden');" }
+            Create Account
+          %button{ type: 'button', class: 'flex-1 text-center py-3 px-6 bg-white border border-secondary text-secondary rounded-xl hover:bg-gray-100 transition duration-200 cursor-pointer', onclick: "document.getElementById('account-form').classList.add('hidden'); document.getElementById('guest-form').classList.remove('hidden');" }
+            Continue as Guest
       
       #account-form.w-full
         %div{ class: "text-secondary text-lg font-lato font-[600] mb-3 text-center"} 
           Create your Account
-        = render partial: 'shared/steps/user', locals: { user: User.new, url: setup_volunteer_potluck_selection_path(@event, @selection), method: :post }
+        = render partial: 'shared/steps/user', locals: { user: User.new, url: setup_volunteer_potluck_selection_path(event, selection), method: :post }
       
       #guest-form.w-full.hidden
         %div{ class: "text-secondary text-lg font-lato font-[600] mb-3 text-center"} 
           Continue as Guest
-        = form_tag guest_volunteer_potluck_selection_path(@event, @selection), method: :post, class: 'lg:space-y-4 space-y-2 lg:w-1/2 w-full mx-auto', data: { turbo: false } do
+        = form_tag guest_volunteer_potluck_selection_path(event, selection), method: :post, class: 'lg:space-y-4 space-y-2 lg:w-1/2 w-full mx-auto', data: { turbo: false } do
           .form-group
             = label_tag :guest_name, "Full Name *", class: 'block text-sm font-bold text-secondary mb-1'
             = text_field_tag :guest_name, nil, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', required: true
