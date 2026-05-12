@@ -17,7 +17,7 @@
   .w-full.grid.grid-cols-1.lg:grid-cols-5.lg:gap-48
     .flex.flex-col.bg-primary.border.border-primary.rounded-lg.lg:p-10.p-5.w-full.relative.col-span-3.mb-3
       %div{ class: "text-secondary lg:text-3xl font-lato font-[700] "} 
-        Potluck Info:
+        Joint Meal Info:
       %div{ class: "text-secondary lg:text-2xl font-lato mb-5"} 
         = @event.special_message
       %div{ class: "text-secondary lg:text-3xl font-lato font-[700] "} 
@@ -59,7 +59,7 @@
     = link_to(image_tag(@ad.image), "https://#{@ad.link}", data: { controller: "link-click", action: "click->link-click#click", link_click_url_value: track_ad_path(@ad), link_click_redirect_value: @ad.link } ) if @ad
   .flex.flex-col.items-center.w-full.relative.mt-5
     %div{ class: "text-secondary lg:text-3xl text-[1rem] font-lato font-[700] mb-5 text-center"}
-      Potluck Options
+      Joint Meal Options
   .grid.grid-cols-1.gap-4.bg-primary.rounded.p-8.text-xl.mb-12.lg:justify-center
     - @event.selections.order(name: :asc).each do |selection|
       .bg-white.rounded.p-8.lg:grid.lg:grid-cols-2

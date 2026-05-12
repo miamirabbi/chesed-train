@@ -40,13 +40,13 @@ class TwilioService
       "A volunteer has joined your Chesed Train! Log in here: #{Rails.application.routes.url_helpers.login_url(protocol: 'https')} and view your Chesed Train!"
 
     when 'volunteer_joined_potluck'
-      "A volunteer has joined your Potluck! Log in here: #{Rails.application.routes.url_helpers.login_url(protocol: 'https')} and view your Potluck!"
+      "A volunteer has joined your Joint Meal! Log in here: #{Rails.application.routes.url_helpers.login_url(protocol: 'https')} and view your Joint Meal!"
 
     when 'chesed_train'
       'Thank you for creating a Chesed Train, you will be notified by text message when someone volunteers'
 
     when 'potluck'
-      'Thank you for creating a Pot Luck, you will be notified by text message when someone volunteers'
+      'Thank you for creating a Joint Meal, you will be notified by text message when someone volunteers'
 
     when 'potluck_updated'
       "#{volunteer} is now bringing #{bringing} on #{date}"
