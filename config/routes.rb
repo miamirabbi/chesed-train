@@ -33,6 +33,7 @@ Rails.application.routes.draw do
         get '/new-volunteer/', to: 'selections#volunteer', as: :volunteer
         post '/new-volunteer/',  to: 'selections#setup_volunteer', as: :setup_volunteer
         patch '/add-volunteer/', to: 'selections#add_volunteer', as: :add_volunteer
+        get '/guest-volunteer/', to: 'selections#new_guest_volunteer', as: :new_guest_volunteer
         post '/guest-volunteer/', to: 'selections#guest_volunteer', as: :guest_volunteer
 
         resources :yom_tovs, except: [:index] do
@@ -59,6 +60,7 @@ Rails.application.routes.draw do
         get '/new-volunteer/', to: 'selections#volunteer', as: :volunteer
         post '/new-volunteer/',  to: 'selections#setup_volunteer', as: :setup_volunteer
         patch '/add-volunteer/', to: 'selections#add_volunteer', as: :add_volunteer
+        get '/guest-volunteer/', to: 'selections#new_guest_volunteer', as: :new_guest_volunteer
         post '/guest-volunteer/', to: 'selections#guest_volunteer', as: :guest_volunteer
       end
     end

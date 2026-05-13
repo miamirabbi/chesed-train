@@ -1,5 +1,5 @@
 class SelectionsController < ApplicationController
-  before_action :set_event, :set_selection, only: %i[update show volunteer setup_volunteer add_volunteer guest_volunteer]
+  before_action :set_event, :set_selection, only: %i[update show volunteer setup_volunteer add_volunteer new_guest_volunteer guest_volunteer]
   before_action :set_kwargs, only: %i[destroy update]
 
   def new
@@ -125,52 +125,83 @@ class SelectionsController < ApplicationController
     end
   end
 
+  def new_guest_volunteer
+    if @event.type == 'ChesedTrain'
+      render template: 'shared/selections/guest_chesed_train', layout: 'application',
+             locals: { event: @event_date || @selection, selection: @selection }
+    else
+      render template: 'shared/selections/guest_potluck', layout: 'application',
+             locals: { event: @event, selection: @selection }
+    end
+  end
+
   def guest_volunteer
-    # Create a guest user with minimal info
-    names = params[:guest_name].to_s.split(' ', 2)
+    guest_name = params[:guest_name].to_s.strip
+    guest_email = params[:guest_email].to_s.strip.downcase
+    guest_phone = params[:guest_phone].to_s.strip
+    bringing = params[:bringing].to_s.strip
+
+    if guest_name.blank? || guest_email.blank? || guest_phone.blank?
+      redirect_back fallback_location: root_path, alert: 'Please fill in name, email, and phone.'
+      return
+    end
+
+    names = guest_name.split(' ', 2)
     first_name = names[0] || 'Guest'
     last_name = names[1] || ''
-    
-    @user = User.new(
-      first_name: first_name,
-      last_name: last_name,
-      email_address: params[:guest_email],
-      phone_number: params[:guest_phone],
-      password: SecureRandom.hex(16),
-      guest: true
-    )
-    
-    if @user.save
-      session[:user_id] = @user.id
-      
-      # Update the selection with volunteer info
-      @selection.update!(
-        volunteer: @user,
-        bringing: params[:bringing],
-        special_note: params[:special_note]
+
+    # Reuse an existing guest user with the same email if present (avoids uniqueness collisions)
+    @user = User.find_by(email_address: guest_email)
+    if @user.nil?
+      @user = User.new(
+        first_name: first_name,
+        last_name: last_name,
+        email_address: guest_email,
+        phone_number: guest_phone,
+        password: SecureRandom.hex(16),
+        guest: true,
+        tos: true,
+        sms: false,
+        updates: false
       )
-      @event.volunteers << @user
-      
-      # Send notifications
-      begin
-        TwilioService.call(@user, 'volunteer')
-        if @event.type == 'Potluck'
-          TwilioService.call(@event.owner, 'volunteer_joined_potluck')
-        else
-          TwilioService.call(@event.owner, 'volunteer_joined_chesed_train')
-        end
-        RecipientMailer.with(event: @event, task: @selection, volunteer: @user).volunteer_signup.deliver_later
-      rescue => e
-        Rails.logger.error("Notification error: #{e.message}")
-      end
-      
-      if @event.type == 'ChesedTrain'
-        redirect_to thank_you_chesed_train_path(@event)
-      else
-        redirect_to thank_you_potluck_path(@event)
+
+      unless @user.save
+        Rails.logger.error("Guest volunteer save failed: #{@user.errors.full_messages.join(', ')}")
+        redirect_back fallback_location: root_path,
+                      alert: "Could not save guest details: #{@user.errors.full_messages.join(', ')}"
+        return
       end
     else
-      redirect_back fallback_location: root_path, alert: 'Please fill in all required fields'
+      # Update the existing guest user's contact info with the latest values
+      @user.update(first_name: first_name, last_name: last_name, phone_number: guest_phone) if @user.guest?
+    end
+
+    # Persist the volunteer assignment on the selection
+    if @event.type == 'ChesedTrain' && @selection.is_a?(EventDate)
+      @selection.update!(volunteer: @user, bringing: bringing)
+    else
+      @selection.update!(volunteer: @user, bringing: bringing)
+    end
+
+    @event.volunteers << @user unless @event.volunteers.include?(@user)
+
+    # Send notifications (don't let failures block the redirect)
+    begin
+      TwilioService.call(@user, 'volunteer')
+      if @event.type == 'Potluck'
+        TwilioService.call(@event.owner, 'volunteer_joined_potluck')
+      else
+        TwilioService.call(@event.owner, 'volunteer_joined_chesed_train')
+      end
+      RecipientMailer.with(event: @event, task: @selection, volunteer: @user).volunteer_signup.deliver_later
+    rescue => e
+      Rails.logger.error("Notification error: #{e.message}")
+    end
+
+    if @event.type == 'ChesedTrain'
+      redirect_to thank_you_chesed_train_path(@event)
+    else
+      redirect_to thank_you_potluck_path(@event)
     end
   end
 
