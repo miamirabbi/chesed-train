@@ -41,6 +41,6 @@
       .mb-4.text-center
         %span.text-secondary.text-sm
           Don't have an account?
-        = link_to "Volunteer as Guest", new_guest_volunteer_chesed_train_event_date_path(@event, @selection), class: 'text-primary-original font-semibold underline ml-1', data: { testid: 'guest-volunteer-link' }
+        = link_to "Volunteer as a Guest", new_guest_volunteer_chesed_train_event_date_path(@event, @selection), class: 'text-primary-original font-semibold underline ml-1', data: { testid: 'guest-volunteer-link' }
       = render partial: 'shared/steps/user', locals: { user: User.new, url: setup_volunteer_chesed_train_event_date_path(@event, @selection), method: :post }
 
