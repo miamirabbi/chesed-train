@@ -1,0 +1,27 @@
+.p-6.w-full.max-w-3xl
+  %h1.text-2xl.font-bold.mb-2
+    = @feedback.display_category
+    submission
+
+  %p.text-sm.text-gray-500.mb-4= @feedback.created_at.strftime('%B %-d, %Y at %-I:%M %p')
+
+  %dl.space-y-2.mb-6
+    %div
+      %dt.font-semibold Name
+      %dd= @feedback.name.presence || '(not provided)'
+    %div
+      %dt.font-semibold Email
+      %dd= @feedback.email.presence || '(not provided)'
+    %div
+      %dt.font-semibold Page
+      %dd= @feedback.page_url.presence || '(not provided)'
+    - if @feedback.user
+      %div
+        %dt.font-semibold Logged-in user
+        %dd= "#{@feedback.user.name} <#{@feedback.user.email_address}>"
+
+  %div.mb-6
+    %h2.font-semibold.mb-2 Message
+    %div.whitespace-pre-wrap.border.rounded-lg.p-4.bg-gray-50= @feedback.message
+
+  = link_to '← Back to list', admin_feedbacks_path, class: 'text-blue-600 underline'

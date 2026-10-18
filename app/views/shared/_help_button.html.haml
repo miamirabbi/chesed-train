@@ -1,0 +1,118 @@
+-# Floating help button + modal (plain HTML/CSS/JS, no Stimulus dependency)
+%button#ct-help-button{ type: 'button', 'aria-label': 'Help & Feedback', data: { testid: 'help-button' }, style: 'position:fixed; bottom:1.25rem; right:1.25rem; z-index:1000; width:3.5rem; height:3.5rem; border-radius:9999px; background-color:#1E40AF; color:#fff; box-shadow:0 10px 25px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; border:none; cursor:pointer;' }
+  %svg{ xmlns: 'http://www.w3.org/2000/svg', width: '28', height: '28', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }
+    %circle{ cx: '12', cy: '12', r: '10' }
+    %path{ d: 'M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3' }
+    %line{ x1: '12', y1: '17', x2: '12.01', y2: '17' }
+
+#ct-help-modal{ style: 'display:none; position:fixed; inset:0; z-index:1001; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; padding:1rem;', data: { testid: 'help-modal' } }
+  .bg-white.rounded-2xl.shadow-2xl.w-full.max-w-md.p-6{ style: 'max-height:90vh; overflow-y:auto;' }
+    .flex.items-start.justify-between.mb-4
+      %div
+        %h2.text-xl.font-bold.text-secondary Need help?
+        %p.text-sm.text-gray-500 Submit an issue or share feedback
+      %button#ct-help-close{ type: 'button', 'aria-label': 'Close', data: { testid: 'help-close' }, style: 'background:none; border:none; font-size:1.5rem; line-height:1; cursor:pointer; color:#6b7280;' } ×
+
+    #ct-help-success{ style: 'display:none;', class: 'p-4 rounded-lg bg-green-50 text-green-800 text-sm mb-3', data: { testid: 'help-success' } }
+      Thanks! Your message has been sent.
+
+    #ct-help-error{ style: 'display:none;', class: 'p-4 rounded-lg bg-red-50 text-red-800 text-sm mb-3', data: { testid: 'help-error' } }
+
+    = form_tag feedbacks_path, id: 'ct-help-form', local: true, html: { 'data-remote': 'true' } do
+      = hidden_field_tag 'feedback[page_url]', '', id: 'ct-help-page-url'
+
+      .mb-3
+        %label.block.text-sm.font-semibold.text-secondary.mb-2 Type
+        .flex.gap-2
+          %label.flex.items-center.gap-2.px-3.py-2.border.rounded-lg.cursor-pointer.flex-1{ style: 'cursor:pointer;' }
+            = radio_button_tag 'feedback[category]', 'issue', false, required: true, data: { testid: 'help-type-issue' }
+            %span Issue
+          %label.flex.items-center.gap-2.px-3.py-2.border.rounded-lg.cursor-pointer.flex-1{ style: 'cursor:pointer;' }
+            = radio_button_tag 'feedback[category]', 'feedback', true, data: { testid: 'help-type-feedback' }
+            %span Feedback
+
+      .mb-3
+        %label.block.text-sm.font-semibold.text-secondary.mb-1{ for: 'ct-help-name' } Name
+        = text_field_tag 'feedback[name]', (current_user&.first_name.to_s + ' ' + current_user&.last_name.to_s).strip.presence, id: 'ct-help-name', class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', data: { testid: 'help-name' }
+
+      .mb-3
+        %label.block.text-sm.font-semibold.text-secondary.mb-1{ for: 'ct-help-email' } Email
+        = email_field_tag 'feedback[email]', current_user&.email_address.to_s.start_with?('guest_') ? nil : current_user&.email_address, id: 'ct-help-email', class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', data: { testid: 'help-email' }
+
+      .mb-4
+        %label.block.text-sm.font-semibold.text-secondary.mb-1{ for: 'ct-help-message' } Message
+        = text_area_tag 'feedback[message]', nil, id: 'ct-help-message', rows: 4, required: true, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', placeholder: 'Tell us what happened or share your thoughts...', data: { testid: 'help-message' }
+
+      .flex.justify-end.gap-2
+        %button{ type: 'button', id: 'ct-help-cancel', class: 'px-4 py-2 rounded-xl border border-secondary text-secondary' } Cancel
+        = submit_tag 'Send', id: 'ct-help-submit', class: 'px-4 py-2 rounded-xl bg-primary-original text-white border border-secondary hover:bg-blue-700 transition cursor-pointer', data: { testid: 'help-submit' }
+
+:javascript
+  (function() {
+    function init() {
+      var btn = document.getElementById('ct-help-button');
+      var modal = document.getElementById('ct-help-modal');
+      var closeBtn = document.getElementById('ct-help-close');
+      var cancelBtn = document.getElementById('ct-help-cancel');
+      var form = document.getElementById('ct-help-form');
+      var pageUrl = document.getElementById('ct-help-page-url');
+      var successBox = document.getElementById('ct-help-success');
+      var errorBox = document.getElementById('ct-help-error');
+      var submitBtn = document.getElementById('ct-help-submit');
+      if (!btn || !modal || !form) return;
+      if (btn.dataset.ctInit === '1') return;
+      btn.dataset.ctInit = '1';
+
+      function openModal() {
+        pageUrl.value = window.location.href;
+        successBox.style.display = 'none';
+        errorBox.style.display = 'none';
+        modal.style.display = 'flex';
+      }
+      function closeModal() { modal.style.display = 'none'; }
+
+      btn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+      });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        successBox.style.display = 'none';
+        errorBox.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.value = 'Sending...';
+
+        var token = document.querySelector('meta[name="csrf-token"]');
+        var headers = { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' };
+        if (token) headers['X-CSRF-Token'] = token.getAttribute('content');
+
+        var fd = new FormData(form);
+        fetch(form.action, { method: 'POST', body: fd, headers: headers, credentials: 'same-origin' })
+          .then(function(r) { return r.json().then(function(j){ return { ok: r.ok, body: j }; }); })
+          .then(function(res) {
+            submitBtn.disabled = false;
+            submitBtn.value = 'Send';
+            if (res.ok && res.body.ok) {
+              successBox.style.display = 'block';
+              form.reset();
+              setTimeout(closeModal, 1800);
+            } else {
+              errorBox.textContent = (res.body.errors || ['Could not send. Please try again.']).join(', ');
+              errorBox.style.display = 'block';
+            }
+          })
+          .catch(function() {
+            submitBtn.disabled = false;
+            submitBtn.value = 'Send';
+            errorBox.textContent = 'Network error. Please try again.';
+            errorBox.style.display = 'block';
+          });
+      });
+    }
+    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('turbo:load', init);
+  })();

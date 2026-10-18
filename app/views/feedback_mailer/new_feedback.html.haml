@@ -1,0 +1,25 @@
+%h2
+  New
+  = @feedback.display_category
+  submission
+
+%table{ cellpadding: '6', style: 'border-collapse: collapse; font-family: Arial, sans-serif;' }
+  %tr
+    %td{ style: 'font-weight: bold;' } Type:
+    %td= @feedback.display_category
+  %tr
+    %td{ style: 'font-weight: bold;' } Name:
+    %td= @feedback.name.presence || '(not provided)'
+  %tr
+    %td{ style: 'font-weight: bold;' } Email:
+    %td= @feedback.email.presence || '(not provided)'
+  %tr
+    %td{ style: 'font-weight: bold;' } Page:
+    %td= @feedback.page_url.presence || '(not provided)'
+  %tr
+    %td{ style: 'font-weight: bold;' } Submitted at:
+    %td= @feedback.created_at.strftime('%b %-d, %Y %-I:%M %p')
+
+%h3 Message
+%div{ style: 'white-space: pre-wrap; border-left: 3px solid #ccc; padding: 8px 12px; margin-top: 8px;' }
+  = @feedback.message

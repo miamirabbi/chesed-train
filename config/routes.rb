@@ -66,6 +66,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :feedbacks, only: [:create]
+
   namespace :admin do
     resource :dashboard
     resources :users
@@ -73,6 +75,7 @@ Rails.application.routes.draw do
     resources :potlucks
     resources :events
     resources :ads
+    resources :feedbacks, only: %i[index show destroy]
     get 'reports/users_report', to: 'reports#users_report', defaults: { format: 'xlsx' }, as: :users_report
     get 'reports/ads_report', to: 'reports#ads_report', defaults: { format: 'xlsx' }, as: :ads_report
     get 'reports/potlucks_report', to: 'reports#potluck_events_report', defaults: { format: 'xlsx' },
