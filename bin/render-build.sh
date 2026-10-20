@@ -19,4 +19,9 @@ bundle exec rails assets:precompile
 bundle exec rails assets:clean
 
 # Run database migrations
+echo "=== DB migration status BEFORE ==="
+bundle exec rails db:migrate:status || true
+echo "=== Running db:migrate ==="
 bundle exec rails db:migrate
+echo "=== DB migration status AFTER ==="
+bundle exec rails db:migrate:status || true
