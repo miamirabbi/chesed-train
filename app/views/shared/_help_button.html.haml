@@ -43,6 +43,12 @@
         %label.block.text-sm.font-semibold.text-secondary.mb-1{ for: 'ct-help-message' } Message
         = text_area_tag 'feedback[message]', nil, id: 'ct-help-message', rows: 4, required: true, class: 'w-full px-3 py-2 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', placeholder: 'Tell us what happened or share your thoughts...', data: { testid: 'help-message' }
 
+      %div{ 'aria-hidden': 'true', style: 'position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;' }
+        %label{ for: 'ct-help-website' } Leave this field empty
+        = text_field_tag 'feedback[website]', '', id: 'ct-help-website', tabindex: '-1', autocomplete: 'off'
+
+      #ct-help-recaptcha.mb-4{ data: { sitekey: Recaptcha.configuration.site_key, testid: 'help-recaptcha' } }
+
       .flex.justify-end.gap-2
         %button{ type: 'button', id: 'ct-help-cancel', class: 'px-4 py-2 rounded-xl border border-secondary text-secondary' } Cancel
         = submit_tag 'Send', id: 'ct-help-submit', class: 'px-4 py-2 rounded-xl bg-primary-original text-white border border-secondary hover:bg-blue-700 transition cursor-pointer', data: { testid: 'help-submit' }
@@ -63,7 +69,25 @@
       if (btn.dataset.ctInit === '1') return;
       btn.dataset.ctInit = '1';
 
+      var captchaEl = document.getElementById('ct-help-recaptcha');
+      var widgetId = null;
+      function renderCaptcha() {
+        if (widgetId !== null || !window.grecaptcha || !window.grecaptcha.render) return;
+        widgetId = window.grecaptcha.render(captchaEl, { sitekey: captchaEl.dataset.sitekey });
+      }
+      window.ctHelpRecaptchaLoaded = renderCaptcha;
+      function loadCaptcha() {
+        if (window.grecaptcha && window.grecaptcha.render) return window.grecaptcha.ready(renderCaptcha);
+        if (document.getElementById('ct-help-recaptcha-js')) return;
+        var s = document.createElement('script');
+        s.id = 'ct-help-recaptcha-js';
+        s.src = 'https://www.recaptcha.net/recaptcha/api.js?onload=ctHelpRecaptchaLoaded&render=explicit';
+        s.async = true; s.defer = true;
+        document.head.appendChild(s);
+      }
+
       function openModal() {
+        loadCaptcha();
         pageUrl.value = window.location.href;
         successBox.style.display = 'none';
         errorBox.style.display = 'none';
@@ -83,6 +107,11 @@
         e.preventDefault();
         successBox.style.display = 'none';
         errorBox.style.display = 'none';
+        if (widgetId === null || !window.grecaptcha.getResponse(widgetId)) {
+          errorBox.textContent = 'Please check the "I\'m not a robot" box.';
+          errorBox.style.display = 'block';
+          return;
+        }
         submitBtn.disabled = true;
         submitBtn.value = 'Sending...';
 
@@ -96,6 +125,7 @@
           .then(function(res) {
             submitBtn.disabled = false;
             submitBtn.value = 'Send';
+            window.grecaptcha.reset(widgetId);
             if (res.ok && res.body.ok) {
               successBox.style.display = 'block';
               form.reset();

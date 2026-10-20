@@ -1,8 +1,11 @@
 class FeedbacksController < ApplicationController
-  # Public submission endpoint — CSRF is not required (no auth state is created/mutated)
-  skip_before_action :verify_authenticity_token, only: [:create]
+  LINK_SPAM = /<a\s|href\s*=|\[url/i
 
   def create
+    return silently_drop('honeypot') if params.dig(:feedback, :website).present?
+    return silently_drop('html link') if params.dig(:feedback, :message).to_s.match?(LINK_SPAM)
+    return silently_drop('recaptcha') unless verify_recaptcha
+
     begin
       user = (session[:user_id] && User.find_by(id: session[:user_id])) || nil
       user = nil if user&.guest?
@@ -39,6 +42,18 @@ class FeedbacksController < ApplicationController
   end
 
   private
+
+  def handle_unverified_request
+    silently_drop('csrf')
+  end
+
+  def silently_drop(reason)
+    Rails.logger.info("[feedback spam] dropped (#{reason}) from #{request.remote_ip}")
+    respond_to do |format|
+      format.html { redirect_back fallback_location: root_path, notice: 'Thanks! Your message has been sent.' }
+      format.json { render json: { ok: true, message: 'Thanks! Your message has been sent.' } }
+    end
+  end
 
   def feedback_params
     params.require(:feedback).permit(:category, :name, :email, :message, :page_url)
