@@ -33,7 +33,7 @@ class FeedbacksController < ApplicationController
       Rails.logger.error("FeedbacksController#create error: #{e.class.name} #{e.message}\n#{e.backtrace&.first(5)&.join("\n")}")
       respond_to do |format|
         format.html { redirect_back fallback_location: root_path, alert: 'Sorry, something went wrong. Please try again.' }
-        format.json { render json: { ok: false, errors: ["#{e.class.name}: #{e.message}"] }, status: :internal_server_error }
+        format.json { render json: { ok: false, errors: ['Sorry, something went wrong. Please try again.'] }, status: :internal_server_error }
       end
     end
   end
