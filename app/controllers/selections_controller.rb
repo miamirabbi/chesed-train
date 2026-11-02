@@ -126,7 +126,10 @@ class SelectionsController < ApplicationController
   end
 
   def new_guest_volunteer
-    if @event.type == 'ChesedTrain'
+    if @event.type == 'ChesedTrain' && params[:selection_id].present?
+      render template: 'shared/selections/guest_yom_tov', layout: 'application',
+             locals: { event_date: @selection.event_date, selection: @selection }
+    elsif @event.type == 'ChesedTrain'
       render template: 'shared/selections/guest_chesed_train', layout: 'application',
              locals: { event: @event_date || @selection, selection: @selection }
     else

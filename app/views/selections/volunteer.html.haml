@@ -4,11 +4,20 @@
   - else
     .container.p-10
       .flex.flex-col.bg-primary
+        .mb-4.text-center
+          %div.text-secondary.text-sm
+            Don't have an account?
+          - guest_path = @selection.is_a?(EventDate) ? new_guest_volunteer_chesed_train_event_date_path(@event, @selection) : new_guest_volunteer_chesed_train_yom_tov_path(@event, @selection.event_date, @selection)
+          = link_to "Volunteer as a Guest", guest_path, class: 'inline-block mt-1 text-primary-original font-semibold underline', data: { testid: 'guest-volunteer-link' }
         = render partial: 'shared/steps/user', locals: { user: @user, url: setup_volunteer_chesed_train_event_date_path(@event, @selection), method: :post }
 - else
   - if current_user.blank? || current_user&.guest?
     .container.p-10
       .flex.flex-col.bg-primary
+        .mb-4.text-center
+          %div.text-secondary.text-sm
+            Don't have an account?
+          = link_to "Volunteer as a Guest", new_guest_volunteer_potluck_selection_path(@event, @selection), class: 'inline-block mt-1 text-primary-original font-semibold underline', data: { testid: 'guest-volunteer-link' }
         = render partial: 'shared/steps/user', locals: { user: @user, url: setup_volunteer_potluck_selection_path(@event, @selection), method: :post }
   - else
     .container.p-10

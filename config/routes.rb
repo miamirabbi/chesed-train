@@ -41,6 +41,8 @@ Rails.application.routes.draw do
             get '/new-volunteer/:selection_id', to: 'selections#volunteer', as: :volunteer
             post '/new-volunteer/:selection_id',  to: 'selections#setup_volunteer', as: :setup_volunteer
             patch '/add-volunteer/:selection_id', to: 'selections#add_volunteer', as: :add_volunteer
+            get '/guest-volunteer/:selection_id', to: 'selections#new_guest_volunteer', as: :new_guest_volunteer
+            post '/guest-volunteer/:selection_id', to: 'selections#guest_volunteer', as: :guest_volunteer
           end
         end
       end
