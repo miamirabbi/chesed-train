@@ -144,6 +144,7 @@ class SelectionsController < ApplicationController
       return redirect_to(@event.type == 'ChesedTrain' ? thank_you_chesed_train_path(@event) : thank_you_potluck_path(@event))
     end
     unless verify_recaptcha
+      flash.delete(:recaptcha_error)
       return redirect_back fallback_location: root_path, alert: %(Please check the "I'm not a robot" box.)
     end
 
