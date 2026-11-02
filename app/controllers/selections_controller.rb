@@ -141,7 +141,9 @@ class SelectionsController < ApplicationController
   def guest_volunteer
     guest_name = params[:guest_name].to_s.strip
     guest_email = params[:guest_email].to_s.strip.downcase
-    guest_phone = params[:guest_phone].to_s.strip
+    guest_phone = params[:guest_phone].to_s.gsub(/\D/, '')
+    guest_area_code = params[:guest_area_code].presence || '+1'
+    guest_sms = params[:guest_sms] == '1'
     bringing = params[:bringing].to_s.strip
 
     if guest_name.blank? || guest_email.blank? || guest_phone.blank?
@@ -161,10 +163,11 @@ class SelectionsController < ApplicationController
         last_name: last_name,
         email_address: guest_email,
         phone_number: guest_phone,
+        area_code: guest_area_code,
         password: SecureRandom.hex(16),
         guest: true,
         tos: true,
-        sms: false,
+        sms: guest_sms,
         updates: false
       )
 
@@ -176,7 +179,10 @@ class SelectionsController < ApplicationController
       end
     else
       # Update the existing guest user's contact info with the latest values
-      @user.update(first_name: first_name, last_name: last_name, phone_number: guest_phone) if @user.guest?
+      if @user.guest?
+        @user.update(first_name: first_name, last_name: last_name, phone_number: guest_phone,
+                     area_code: guest_area_code, sms: guest_sms)
+      end
     end
 
     # Persist the volunteer assignment on the selection

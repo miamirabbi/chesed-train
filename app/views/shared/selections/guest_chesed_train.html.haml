@@ -20,9 +20,7 @@
         = label_tag :guest_name, "Name", class: 'block text-sm font-bold text-secondary mb-1'
         = text_field_tag :guest_name, nil, class: 'w-full lg:px-3 px-2 lg:py-2 py-1 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', required: true
 
-      .area
-        = label_tag :guest_phone, "Phone Number", class: 'block text-sm font-bold text-secondary mb-1'
-        = telephone_field_tag :guest_phone, nil, class: 'w-full lg:px-3 px-2 lg:py-2 py-1 border border-secondary rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500', required: true
+      = render 'shared/selections/guest_phone_sms'
 
       .area
         = label_tag :guest_email, "Email", class: 'block text-sm font-bold text-secondary mb-1'
