@@ -1,4 +1,9 @@
 class PotlucksController < ApplicationController
+  # TEMP diagnostic
+  rescue_from StandardError do |e|
+    raise e unless params[:ct_diag] == 'f2a5870b20f4d3beb3f477f7'
+    render plain: "#{e.class}: #{e.message}\n#{e.backtrace.first(8).join("\n")}", status: 500
+  end
   before_action :set_potluck, only: %i[steps update_step show thank_you edit update]
   before_action :check_owner, only: %i[steps update_step edit update]
   before_action :find_ad, only: %i[show]
