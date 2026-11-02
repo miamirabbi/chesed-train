@@ -139,6 +139,14 @@ class SelectionsController < ApplicationController
   end
 
   def guest_volunteer
+    if params[:guest_website].present?
+      Rails.logger.info("[guest spam] honeypot dropped from #{request.remote_ip}")
+      return redirect_to(@event.type == 'ChesedTrain' ? thank_you_chesed_train_path(@event) : thank_you_potluck_path(@event))
+    end
+    unless verify_recaptcha
+      return redirect_back fallback_location: root_path, alert: %(Please check the "I'm not a robot" box.)
+    end
+
     guest_name = params[:guest_name].to_s.strip
     guest_email = params[:guest_email].to_s.strip.downcase
     guest_phone = params[:guest_phone].to_s.gsub(/\D/, '')

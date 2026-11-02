@@ -1,0 +1,5 @@
+.flex.justify-center.py-4{ data: { testid: 'guest-recaptcha' } }
+  = recaptcha_tags(noscript: false)
+%div{ 'aria-hidden': 'true', style: 'position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden;' }
+  = label_tag :guest_website, 'Leave this field empty'
+  = text_field_tag :guest_website, '', tabindex: '-1', autocomplete: 'off'
