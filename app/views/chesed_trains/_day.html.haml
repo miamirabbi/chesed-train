@@ -17,7 +17,7 @@
         .area.lg:ml-5
           = selection.special_note
     - else
-      - if Date.today > event.end_date
+      - if event.end_date.present? && Date.today > event.end_date
         .text-center
           Volunteer time has passed
       - else

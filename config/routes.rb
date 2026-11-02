@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'chesed-train-pro/', to: 'payments#new', as: :new_payment
   post 'ads/:id/track', to: 'ads#track', as: 'track_ad'
   match '/404', to: 'errors#not_found', via: :all
+  match '/500', to: 'errors#not_found', via: :all
 
   resources :chesed_trains do
     member do

@@ -44,9 +44,9 @@
       %div{ class: "text-secondary lg:text-2xl font-lato font-[700] mb-5"} 
         Organizer:
         .font-normal.lg:mb-5
-          = @event.owner.name
+          = @event.owner&.name
           <br>
-          = @event.owner.email_address
+          = @event.owner&.email_address
           - if @event.organizer_phone.present?
             <br>
             = @event.organizer_phone
@@ -68,7 +68,7 @@
                 %li
                   = name
         .mt-10.w-full{ data: { controller: 'copy notification' }}
-          - if Date.today > @event.end_date
+          - if @event.end_date.present? && Date.today > @event.end_date
             Date for adding volunteers has passed
           - else
             = link_to 'Share', '', class: 'w-full block px-12 mt-5 bg-primary-original border border-secondary text-white p-2 text-center rounded-xl hover:bg-blue-700 transition duration-200 cursor-pointer font-normal', data: { action: 'click->copy#copyUrl click->notification#showNotification' }
