@@ -49,6 +49,7 @@ class Event < ApplicationRecord
 
   belongs_to :owner, class_name: 'User'
   has_many :volunteer_events, dependent: :destroy
+  has_many :updates, dependent: :destroy
   has_many :volunteers, through: :volunteer_events, source: :user
 
   validates :name, presence: true
